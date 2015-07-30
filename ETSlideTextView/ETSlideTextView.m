@@ -55,7 +55,8 @@
 - (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withPlaceholderAppendix:(NSString *)placeholderAppendix {
 
     self = [self initWithFrame:CGRectZero];
-    self.autoresizingMask = _addView.autoresizingMask;
+    self.frame = CGRectMake(_addView.frame.origin.x, -(_addView.frame.size.height), masterView.frame.size.width, _addView.frame.size.height);
+    self.addView.frame = CGRectMake(_addView.frame.origin.x, _addView.frame.origin.y, masterView.frame.size.width, _addView.frame.size.height);
     
     self.delegate = delegate;
     
@@ -65,9 +66,6 @@
     if (placeholderAppendix) {
         [_addViewButton setTitle:[NSString stringWithFormat:@"%@ %@!", NSLocalizedStringFromTable(@"Send", @"ETSlideTextView", nil), placeholderAppendix] forState:UIControlStateNormal];
     }
-    
-    // Add the frame
-    [self setFrame:CGRectMake(_addView.frame.origin.x, -(_addView.frame.size.height), _addView.frame.size.width, _addView.frame.size.height)];
     
     // Add to controller's view
     [masterView addSubview:self];
