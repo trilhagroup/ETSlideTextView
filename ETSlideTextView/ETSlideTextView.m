@@ -42,8 +42,8 @@
     [_inputTextView configureWrapper];
     
     // Message Button
-    [_removeViewButton setTitle:NSLocalizedString(@"Cancel", nil) forState:UIControlStateNormal];
-    [_addViewButton setTitle:[NSString stringWithFormat:@"%@!", NSLocalizedString(@"Send", nil)] forState:UIControlStateNormal];
+    [_removeViewButton setTitle:NSLocalizedStringFromTable(@"Cancel", @"ETSlideTextView", nil) forState:UIControlStateNormal];
+    [_addViewButton setTitle:[NSString stringWithFormat:@"%@!", NSLocalizedStringFromTable(@"Send", @"ETSlideTextView", nil)] forState:UIControlStateNormal];
 }
 
 #pragma mark - Initialization Methods
@@ -63,8 +63,7 @@
     
     // Change placeholder
     if (placeholderAppendix) {
-        [_inputTextView setPlaceholder:[NSString stringWithFormat:@"%@ %@?", NSLocalizedString(@"What's your", nil), placeholderAppendix]];
-        [_addViewButton setTitle:[NSString stringWithFormat:@"%@ %@!", NSLocalizedString(@"Send", nil), placeholderAppendix] forState:UIControlStateNormal];
+        [_addViewButton setTitle:[NSString stringWithFormat:@"%@ %@!", NSLocalizedStringFromTable(@"Send", @"ETSlideTextView", nil), placeholderAppendix] forState:UIControlStateNormal];
     }
     
     // Add the frame

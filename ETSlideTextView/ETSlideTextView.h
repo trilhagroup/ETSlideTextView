@@ -7,7 +7,6 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UIPlaceHolderTextView.h"
 
 @class ETSlideTextView;
 
@@ -25,7 +24,7 @@
 @interface ETSlideTextView : UIView
 
 @property (strong, nonatomic) IBOutlet UIView *addView;
-@property (strong, nonatomic) IBOutlet UIPlaceHolderTextView *inputTextView;
+@property (strong, nonatomic) IBOutlet UITextView *inputTextView;
 @property (strong, nonatomic) IBOutlet UIButton *removeViewButton;
 @property (strong, nonatomic) IBOutlet UIButton *addViewButton;
 
