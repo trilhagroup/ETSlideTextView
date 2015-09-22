@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "UIPlaceHolderTextView.h"
 
 @class ETSlideTextView;
 
@@ -14,6 +15,7 @@
 @optional
 
 - (void)slideTextView:(ETSlideTextView *)slideTextView confirmedText:(NSString *)text;
+- (void)slideTextViewConfirmedText:(ETSlideTextView *)slideTextView;
 - (void)slideTextViewWillAppear:(ETSlideTextView *)slideTextView;
 - (void)slideTextViewDidAppear:(ETSlideTextView *)slideTextView;
 - (void)slideTextViewWillDisappear:(ETSlideTextView *)slideTextView;
@@ -24,7 +26,8 @@
 @interface ETSlideTextView : UIView
 
 @property (strong, nonatomic) IBOutlet UIView *addView;
-@property (strong, nonatomic) IBOutlet UITextView *inputTextView;
+@property (strong, nonatomic) IBOutlet UIPlaceHolderTextView *inputTextView;
+@property (strong, nonatomic) IBOutlet UIView *addButtonsView;
 @property (strong, nonatomic) IBOutlet UIButton *removeViewButton;
 @property (strong, nonatomic) IBOutlet UIButton *addViewButton;
 
@@ -32,7 +35,11 @@
 @property (strong, nonatomic) id<ETSlideTextViewDelegate> delegate;
 
 - (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate;
-- (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withPlaceholderAppendix:(NSString *)placeholderAppendix;
+- (id)initWithMasterView:(UIView *)masterView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate;
+- (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle;
+- (id)initWithMasterView:(UIView *)masterView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle;
+
+
 - (void)show;
 - (void)hide;
 
