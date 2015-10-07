@@ -22,14 +22,13 @@
     return self;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (void)awakeFromNib
 {
-    self = [super initWithCoder:aDecoder];
+    [super awakeFromNib];
     if (self) {
         // Initialization code
         [self configureView];
     }
-    return self;
 }
 
 #pragma mark - Configuration Methods
@@ -78,6 +77,10 @@
     // Set and hide our view before animating
     self.addView.frame = CGRectMake(_addView.frame.origin.x, _addView.frame.origin.y, masterView.frame.size.width, _addView.frame.size.height);
     self.frame = CGRectMake(_addView.frame.origin.x, -(_addView.frame.size.height), masterView.frame.size.width, _addView.frame.size.height);
+    
+    // Change autoresizing mask
+    self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.addView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     // Assign delegates
     self.delegate = delegate;

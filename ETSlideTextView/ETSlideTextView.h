@@ -12,8 +12,8 @@
 @class ETSlideTextView;
 
 @protocol ETSlideTextViewDelegate <NSObject>
-@optional
 
+@optional
 - (void)slideTextView:(ETSlideTextView *)slideTextView confirmedText:(NSString *)text;
 - (void)slideTextViewConfirmedText:(ETSlideTextView *)slideTextView;
 - (void)slideTextViewWillAppear:(ETSlideTextView *)slideTextView;
