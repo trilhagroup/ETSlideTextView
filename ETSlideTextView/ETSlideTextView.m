@@ -36,6 +36,10 @@
 - (void)configureView {
     [self addSubview:[[[NSBundle mainBundle] loadNibNamed:@"ETSlideTextView" owner:self options:nil] objectAtIndex:0]];
     
+    // Master
+    [_masterView setExclusiveTouch:YES];
+    [_masterView setBackgroundColor:[UIColor colorWithRed:0.38 green:0.38 blue:0.38 alpha:0.7]];
+    
     // Text field
     [_inputTextView setTextColor:[ColorThemeController tableViewCellTextColor]];
     [_inputTextView configureWrapper];
@@ -48,20 +52,19 @@
 
 #pragma mark - Initialization Methods
 
-- (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate {
-    return [self initWithMasterView:masterView withCustomView:nil delegate:delegate validatingEmptyText:NO withConfirmationTitle:nil];
+- (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate {
+    return [self initWithRootView:rootView withCustomView:nil delegate:delegate validatingEmptyText:NO withConfirmationTitle:nil];
 }
 
-- (id)initWithMasterView:(UIView *)masterView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate {
-    return [self initWithMasterView:masterView withCustomView:customView delegate:delegate validatingEmptyText:NO withConfirmationTitle:nil];
+- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate {
+    return [self initWithRootView:rootView withCustomView:customView delegate:delegate validatingEmptyText:NO withConfirmationTitle:nil];
 }
 
-
-- (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle {
-    return [self initWithMasterView:masterView withCustomView:nil delegate:delegate validatingEmptyText:emptyText withConfirmationTitle:confirmationTitle];
+- (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle {
+    return [self initWithRootView:rootView withCustomView:nil delegate:delegate validatingEmptyText:emptyText withConfirmationTitle:confirmationTitle];
 }
 
-- (id)initWithMasterView:(UIView *)masterView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle {
+- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle {
 
     self = [self initWithFrame:CGRectZero];
     
@@ -75,12 +78,14 @@
     }
 
     // Set and hide our view before animating
-    self.addView.frame = CGRectMake(_addView.frame.origin.x, _addView.frame.origin.y, masterView.frame.size.width, _addView.frame.size.height);
-    self.frame = CGRectMake(_addView.frame.origin.x, -(_addView.frame.size.height), masterView.frame.size.width, _addView.frame.size.height);
+    self.addView.frame = CGRectMake(_addView.frame.origin.x, -(_addView.frame.size.height), rootView.frame.size.width, _addView.frame.size.height);
+    self.masterView.frame = CGRectMake(0.0f, 0.0f, rootView.frame.size.width, rootView.frame.size.height);
+    self.frame = CGRectMake(0.0f, 0.0f, rootView.frame.size.width, rootView.frame.size.height);
     
     // Change autoresizing mask
-    self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.addView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.masterView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
     // Assign delegates
     self.delegate = delegate;
@@ -90,7 +95,7 @@
     if (confirmationTitle) [_addViewButton setTitle:confirmationTitle forState:UIControlStateNormal];
     
     // Add to controller's view
-    [masterView addSubview:self];
+    [rootView addSubview:self];
     
     return self;
 }
@@ -105,7 +110,7 @@
     
     // Animate the transition
     [UIView animateWithDuration:0.7f animations:^{
-        [self setFrame:CGRectMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height, self.frame.size.width, self.frame.size.height)];
+        [self.addView setFrame:CGRectMake(self.addView.frame.origin.x, self.addView.frame.origin.y + self.addView.frame.size.height, self.addView.frame.size.width, self.addView.frame.size.height)];
     } completion:^(BOOL completion){
         if ([_delegate respondsToSelector:@selector(slideTextViewDidAppear:)]) {
             [_delegate slideTextViewDidAppear:self];
@@ -124,7 +129,7 @@
     
     // Animate the transition
     [UIView animateWithDuration:0.7f animations:^{
-        [self setFrame:CGRectMake(self.frame.origin.x, -(self.frame.size.height), self.frame.size.width, self.frame.size.height)];
+        [self.addView setFrame:CGRectMake(self.addView.frame.origin.x, -(self.addView.frame.size.height), self.addView.frame.size.width, self.addView.frame.size.height)];
     } completion:^(BOOL completion){
         [self removeFromSuperview];
         if ([_delegate respondsToSelector:@selector(slideTextViewDidDisappear:)]) {

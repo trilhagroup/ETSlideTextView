@@ -25,6 +25,7 @@
 
 @interface ETSlideTextView : UIView
 
+@property (strong, nonatomic) IBOutlet UIView *masterView;
 @property (strong, nonatomic) IBOutlet UIView *addView;
 @property (strong, nonatomic) IBOutlet UIPlaceHolderTextView *inputTextView;
 @property (strong, nonatomic) IBOutlet UIView *addButtonsView;
@@ -34,11 +35,10 @@
 @property (assign, nonatomic) BOOL *validateEmptyView;
 @property (strong, nonatomic) id<ETSlideTextViewDelegate> delegate;
 
-- (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate;
-- (id)initWithMasterView:(UIView *)masterView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate;
-- (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle;
-- (id)initWithMasterView:(UIView *)masterView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle;
-
+- (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate;
+- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate;
+- (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle;
+- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle;
 
 - (void)show;
 - (void)hide;

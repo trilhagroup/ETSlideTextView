@@ -17,20 +17,24 @@ How-to
 Programmatically, just alloc it and set its frame:
 
 ```
-- (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate;
-- (id)initWithMasterView:(UIView *)masterView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withPlaceholderAppendix:(NSString *)placeholderAppendix;
+- (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate;
+- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate;
+- (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle;
+- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle;
 ```
 
-- `masterView` will probably be your viewcontroller's view.
+- `rootView` will probably be your viewcontroller's view.
+- `customView` replaces the default view with a custom one.
 - `delegate` is an optional parameter for the methods below.
 - `emptyText` provides a simple validation for input's which are empty.
-- `placeholderAppendix` is a localized string with is appended to the end of your confirmation button.
+- `confirmationTitle` is a localized string set as your confirmation button.
 
 ### Delegate
 
 You have several delegate callbacks available to you. Just hook your delegate outlet and you are ready to go!
 
 ```
+@optional
 - (void)slideTextView:(ETSlideTextView *)slideTextView confirmedText:(NSString *)text;
 - (void)slideTextViewWillAppear:(ETSlideTextView *)slideTextView;
 - (void)slideTextViewDidAppear:(ETSlideTextView *)slideTextView;
