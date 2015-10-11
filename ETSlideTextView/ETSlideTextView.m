@@ -37,6 +37,7 @@
     [self addSubview:[[[NSBundle mainBundle] loadNibNamed:@"ETSlideTextView" owner:self options:nil] objectAtIndex:0]];
     
     // Master
+    [_masterView setAlpha:0.0f];
     [_masterView setExclusiveTouch:YES];
     [_masterView setBackgroundColor:[UIColor colorWithRed:0.38 green:0.38 blue:0.38 alpha:0.7]];
     
@@ -111,6 +112,7 @@
     // Animate the transition
     [UIView animateWithDuration:0.7f animations:^{
         [self.addView setFrame:CGRectMake(self.addView.frame.origin.x, self.addView.frame.origin.y + self.addView.frame.size.height, self.addView.frame.size.width, self.addView.frame.size.height)];
+        [self.masterView setAlpha:1.0f];
     } completion:^(BOOL completion){
         if ([_delegate respondsToSelector:@selector(slideTextViewDidAppear:)]) {
             [_delegate slideTextViewDidAppear:self];
@@ -130,6 +132,7 @@
     // Animate the transition
     [UIView animateWithDuration:0.7f animations:^{
         [self.addView setFrame:CGRectMake(self.addView.frame.origin.x, -(self.addView.frame.size.height), self.addView.frame.size.width, self.addView.frame.size.height)];
+        [self.masterView setAlpha:0.0f];
     } completion:^(BOOL completion){
         [self removeFromSuperview];
         if ([_delegate respondsToSelector:@selector(slideTextViewDidDisappear:)]) {
