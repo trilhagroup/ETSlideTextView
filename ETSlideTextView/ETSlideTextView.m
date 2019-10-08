@@ -7,7 +7,6 @@
 //
 
 #import "ETSlideTextView.h"
-#import "UIView+Wrapper.h"
 #import "ColorThemeController.h"
 
 @implementation ETSlideTextView
@@ -42,8 +41,8 @@
     [_masterView setBackgroundColor:[UIColor colorWithRed:0.38 green:0.38 blue:0.38 alpha:0.7]];
     
     // Text field
-    [_inputTextView setTextColor:[ColorThemeController tableViewCellTextColor]];
-    [_inputTextView configureWrapper];
+    [_inputTextView setTextColor:[ColorThemeController secondaryTextColor]];
+    [_inputTextView setTextContainerInset:UIEdgeInsetsMake(8.0f, 7.0f, 8.0f, 15.0f)];
     
     // Buttons view
     [_addButtonsView setBackgroundColor:_addView.backgroundColor];
@@ -54,27 +53,37 @@
 #pragma mark - Initialization Methods
 
 - (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate {
-    return [self initWithRootView:rootView withCustomView:nil delegate:delegate validatingEmptyText:NO withConfirmationTitle:nil];
+    return [self initWithRootView:rootView withCustomView:nil delegate:delegate withPlaceholder:nil validatingEmptyText:NO withConfirmationTitle:nil];
 }
 
-- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate {
-    return [self initWithRootView:rootView withCustomView:customView delegate:delegate validatingEmptyText:NO withConfirmationTitle:nil];
+- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate withConfirmationTitle:(NSString *)confirmationTitle {
+    return [self initWithRootView:rootView withCustomView:customView delegate:delegate withPlaceholder:nil validatingEmptyText:NO withConfirmationTitle:confirmationTitle];
 }
 
-- (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle {
-    return [self initWithRootView:rootView withCustomView:nil delegate:delegate validatingEmptyText:emptyText withConfirmationTitle:confirmationTitle];
+- (id)initWithRootView:(UIView *)rootView delegate:(id<ETSlideTextViewDelegate>)delegate withPlaceholder:(NSString *)inputPlaceholder validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle {
+    return [self initWithRootView:rootView withCustomView:nil delegate:delegate withPlaceholder:inputPlaceholder validatingEmptyText:emptyText withConfirmationTitle:confirmationTitle];
 }
 
-- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle {
+- (id)initWithRootView:(UIView *)rootView withCustomView:(UIView*)customView delegate:(id<ETSlideTextViewDelegate>)delegate withPlaceholder:(NSString *)inputPlaceholder validatingEmptyText:(BOOL)emptyText withConfirmationTitle:(NSString *)confirmationTitle {
 
     self = [self initWithFrame:CGRectZero];
     
     if (customView) {
-        // Replace view and assign as the default
+        // Remove current views
         [self.inputTextView removeFromSuperview];
         self.inputTextView = nil;
-        [self.addView addSubview:customView];
-        self.addView.frame = CGRectMake(_addView.frame.origin.x, _addView.frame.origin.y, _addView.frame.size.width, customView.frame.size.height + _addButtonsView.frame.size.height);
+        [self.addButtonsView removeFromSuperview];
+        [self.addView removeFromSuperview];
+        
+        // Replace main view
+        self.addView = customView;
+        
+        // Re-add previous screens
+        [self.masterView addSubview:_addView];
+        [self.addView addSubview:_addButtonsView];
+        
+        // Set their frames
+        self.addView.frame = CGRectMake(_addView.frame.origin.x, _addView.frame.origin.y, _addView.frame.size.width, _addView.frame.size.height + _addButtonsView.frame.size.height);
         self.addButtonsView.frame = CGRectMake(_addButtonsView.frame.origin.x, _addView.frame.size.height - _addButtonsView.frame.size.height, _addButtonsView.frame.size.width, _addButtonsView.frame.size.height);
     }
 
@@ -88,11 +97,14 @@
     self.masterView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     
+    // Change text placeholder
+    if (inputPlaceholder) [_inputTextView setPlaceholder:inputPlaceholder];
+    
     // Assign delegates
     self.delegate = delegate;
     self.validateEmptyView = emptyText;
     
-    // Change placeholder
+    // Change button placeholder
     if (confirmationTitle) [_addViewButton setTitle:confirmationTitle forState:UIControlStateNormal];
     
     // Add to controller's view
@@ -109,13 +121,17 @@
         [_delegate slideTextViewWillAppear:self];
     }
     
+    if (_inputTextView) {
+        [_inputTextView becomeFirstResponder];
+    }
+    
     // Animate the transition
     [UIView animateWithDuration:0.7f animations:^{
         [self.addView setFrame:CGRectMake(self.addView.frame.origin.x, self.addView.frame.origin.y + self.addView.frame.size.height, self.addView.frame.size.width, self.addView.frame.size.height)];
         [self.masterView setAlpha:1.0f];
     } completion:^(BOOL completion){
-        if ([_delegate respondsToSelector:@selector(slideTextViewDidAppear:)]) {
-            [_delegate slideTextViewDidAppear:self];
+        if ([self->_delegate respondsToSelector:@selector(slideTextViewDidAppear:)]) {
+            [self->_delegate slideTextViewDidAppear:self];
         }
     }];
 }
@@ -135,8 +151,8 @@
         [self.masterView setAlpha:0.0f];
     } completion:^(BOOL completion){
         [self removeFromSuperview];
-        if ([_delegate respondsToSelector:@selector(slideTextViewDidDisappear:)]) {
-            [_delegate slideTextViewDidDisappear:self];
+        if ([self->_delegate respondsToSelector:@selector(slideTextViewDidDisappear:)]) {
+            [self->_delegate slideTextViewDidDisappear:self];
         }
     }];
 }
